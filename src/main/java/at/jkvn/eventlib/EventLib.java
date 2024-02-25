@@ -13,11 +13,16 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
 @Getter
 public class EventLib {
-    public static Configuration configuration;
+    @Getter
+    private static Configuration configuration;
+    @Getter
     private static final List<Listener> listeners = new ArrayList<>();
 
     @SneakyThrows
@@ -66,7 +71,10 @@ public class EventLib {
         return configuration.getType().equals(ListenerRegistryType.AUTOMATIC);
     }
 
-    public static void registerListener(Listener listener) {
+    public static void registerListener(Listener listener) throws Exception {
+        if(isAutomatic()) {
+            throw new Exception("Cannot register listener on automatic mode"); //Todo: create custom exception
+        }
         listeners.add(listener);
     }
 

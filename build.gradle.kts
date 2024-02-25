@@ -1,19 +1,27 @@
+import org.gradle.internal.impldep.org.fusesource.jansi.AnsiRenderer.test
+
 plugins {
     id("java-library")
     id("maven-publish")
 }
 
 group = "at.jkvn.eventlib"
-version = "1.0.1"
+version = "1.0.2-SNAPSHOT"
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
     implementation("org.reflections:reflections:0.9.12")
     compileOnly("org.projectlombok:lombok:1.18.30")
     annotationProcessor("org.projectlombok:lombok:1.18.30")
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 publishing {
