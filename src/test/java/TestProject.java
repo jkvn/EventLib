@@ -13,15 +13,13 @@ public class TestProject {
                 .type(ListenerRegistryType.MANUELL)
                 .build());
 
-        new NonTestProject();
-
         EventLib.registerListener(new StartupListener());
         System.out.println("Hello, World!");
-        EventLib.call(new StartupEvent(System.currentTimeMillis()));
+        EventLib.call(new StartupEvent());
     }
 
     @EventHandler
     public void onStartup(StartupEvent event) {
-        System.out.println("Startup event called at " + (Math.abs(event.getStartTimestamp() - System.currentTimeMillis())) + "ms");
+        System.out.println("Startup event called at ms");
     }
 }

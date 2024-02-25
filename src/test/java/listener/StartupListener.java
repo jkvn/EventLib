@@ -8,6 +8,6 @@ import events.StartupEvent;
 public class StartupListener implements Listener {
 
     public void onStartUpEvent(StartupEvent event) {
-        System.out.println("Listener Start up time: " + (event.getStartTimestamp() - System.currentTimeMillis()) + "ms");
+        System.out.println("Listener Start up time: ms");
     }
 }

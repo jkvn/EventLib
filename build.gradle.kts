@@ -16,10 +16,6 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.30")
 }
 
-tasks.test {
-    useJUnitPlatform()
-}
-
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
