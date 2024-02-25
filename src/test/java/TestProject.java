@@ -18,8 +18,6 @@ public class TestProject {
         EventLib.registerListener(new StartupListener());
         System.out.println("Hello, World!");
         EventLib.call(new StartupEvent(System.currentTimeMillis()));
-
-
     }
 
     @EventHandler
