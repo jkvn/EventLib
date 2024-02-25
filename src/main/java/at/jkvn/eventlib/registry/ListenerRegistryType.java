@@ -4,6 +4,6 @@ import lombok.ToString;
 
 @ToString
 public enum ListenerRegistryType {
-    MANUELL,
+    MANUAL,
     AUTOMATIC
 }

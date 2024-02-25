@@ -10,7 +10,7 @@ public class TestProject {
     public static void main(String[] args) {
         EventLib.configure(Configuration.builder()
                 .allowedHosts(new String[]{})
-                .type(ListenerRegistryType.MANUELL)
+                .type(ListenerRegistryType.MANUAL)
                 .build());
 
         EventLib.registerListener(new StartupListener());
