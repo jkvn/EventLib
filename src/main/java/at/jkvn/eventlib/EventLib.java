@@ -66,6 +66,14 @@ public class EventLib {
         listeners.addAll(Arrays.stream(allListeners).toList());
     }
 
+    public static void unregisterListener(Listener listener) {
+        listeners.remove(listener);
+    }
+
+    public static void unregisterListeners(Listener... allListeners) {
+        listeners.removeAll(Arrays.stream(allListeners).toList());
+    }
+
     public static void configure(Configuration configuration) {
         EventLib.configuration = configuration;
     }
