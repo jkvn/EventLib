@@ -1,8 +1,9 @@
-# EventLib
+# **EventLib**
+## ⚠️ UNDER DEVELOPMENT ⚠️
 
-EventLib is a simple event library that uses sockets in Java to facilitate communication between different applications.
+Welcome to EventLib, your user-friendly Java event library using sockets for seamless communication between various applications.
 
-## Quick Start
+## **Quick Start** 🚀
 
 ### Maven
 
@@ -15,7 +16,7 @@ Add the following repository to your `pom.xml`:
 </repository>
 ```
 
-And include the following dependency:
+Then, include the dependency:
 
 ```xml
 <dependency>
@@ -27,7 +28,7 @@ And include the following dependency:
 
 ### Gradle
 
-Add the following repository to your `build.gradle`:
+For Gradle, add this repository to your `build.gradle`:
 
 ```groovy
 maven {
@@ -35,44 +36,67 @@ maven {
 }
 ```
 
-And include the following dependency:
+Then, include the dependency:
 
 ```groovy
 implementation("at.jkvn.eventlib:EventLib:LATEST")
 ```
 
-## Integration
+## Integration 🛠️
 
-To integrate EventLib into your project, simply follow these steps:
+Integrating EventLib into your project is straightforward:
 
 ### Configuration:
 
 ```java
-EventLib.configure(Configuration configuration);
+EventLib.configure(Configuration.builder()
+                .type(ListenerRegistryType.AUTOMATIC)
+                .build());
 ```
 
 ### Listener Registration:
 
-```java
-EventLib.registerListener(new YourFavoriteListener());
+No need to register listeners if you use ListenerRegistryType.AUTOMATIC.
+If you opt for ListenerRegistryType.MANUAL, implement your class with the **Listener** interface.
 
-EventLib.registerListeners(new YourFavoriteListener(), new YourNicesListener());
+**ListenerRegistryType.MANUAL**
+```java
+class MyListener implements Listener {
+    @EventHandler
+    public void onStartup(StartupEvent event) {
+      System.out.println("Server started");
+    }
+}
 ```
 
-### Example Listener Method:
+**ListenerRegistryType.AUTOMATIC**
+```java
+class MyListenerNoRegistration {
+    @EventHandler
+    public void onStartup(StartupEvent event) {
+      System.out.println("Server started");
+    }
+}
+```
+
+Then register your listeners:
 
 ```java
-@EventHandler
-@Priority(EventPriority.NORMAL)
-public void onStartup(StartupEvent event) {
-    System.out.println("Server started");
-}
+EventLib.registerListener(new MyListener());
+
+EventLib.registerListeners(new MyListener(), new YourFavoriteListener());
+```
+
+### Example Event
+
+```java
+class StartupEvent extends Event {}
 ```
 
 ### Triggering Events:
 
 ```java
-EventLib.callEvent(new StartupEvent());
+EventLib.call(new StartupEvent());
 ```
 
 ## Priorities
@@ -90,6 +114,7 @@ EventLib supports the following event priorities:
 EventLib provides additional features such as event cancellation and resumption:
 
 ```java
+@EventHandler
 public void onListenYourFavoriteEvent(YourFavoriteEvent event) {
     int i = 0;
     if (i > 0) {
@@ -103,6 +128,7 @@ public void onListenYourFavoriteEvent(YourFavoriteEvent event) {
 To resume an event:
 
 ```java
+@EventHandler
 public void onListenYourFavoriteEvent(YourFavoriteEvent event) {
     int i = 0;
     if (i > 0) {
@@ -115,7 +141,7 @@ public void onListenYourFavoriteEvent(YourFavoriteEvent event) {
 }
 ```
 
-## Future Plans
+## Future Plans 🛌
 
 - [ ] Asynchronous events
 - [ ] Event cancellation
