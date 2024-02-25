@@ -62,7 +62,6 @@ If you opt for ListenerRegistryType.MANUAL, implement your class with the **List
 **ListenerRegistryType.MANUAL**
 ```java
 class MyListener implements Listener {
-    @EventHandler
     public void onStartup(StartupEvent event) {
       System.out.println("Server started");
     }
