@@ -1,6 +1,8 @@
 package at.jkvn.eventlib;
 
 import at.jkvn.eventlib.annotation.EventHandler;
+import at.jkvn.eventlib.annotation.Priority;
+import at.jkvn.eventlib.enumeration.EventPriority;
 import at.jkvn.eventlib.registry.Configuration;
 import at.jkvn.eventlib.registry.ListenerRegistryType;
 import lombok.Getter;
@@ -34,7 +36,13 @@ public class EventLib {
         methods.stream()
                 .filter(method -> method.getParameterCount() == 1
                         && method.getParameterTypes()[0].isAssignableFrom(event.getClass()))
-                .forEach(method -> invokeSafely(method, event));
+                .sorted(Comparator.comparingInt(method -> {
+                    Priority priority = method.getAnnotation(Priority.class);
+                    return priority != null ? priority.value().ordinal() : EventPriority.NORMAL.ordinal();
+                }))
+                .forEach(method -> {
+                    invokeSafely(method, event);
+                });
     }
 
     private static void invokeSafely(Method method, Event event) {
