@@ -145,7 +145,7 @@ public void onListenYourFavoriteEvent(YourFavoriteEvent event) {
 - [ ] Asynchronous events
 - [x] Event cancellation
 - [x] Event listener registration
-- [ ] Event listener deregistration
+- [x] Event listener deregistration
 - [ ] Event listener priority
 - [ ] Socket connection
 - [ ] Socket authentication (password, private key, etc.)
