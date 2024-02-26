@@ -2,10 +2,12 @@ package at.jkvn.eventlib.registry;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Builder
 @Getter
+@Setter
 public class Configuration {
-    public String[] allowedHosts;
-    public ListenerRegistryType type;
+    private String[] allowedHosts;
+    private ListenerRegistryType type;
 }
