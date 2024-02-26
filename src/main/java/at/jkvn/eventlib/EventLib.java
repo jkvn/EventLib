@@ -5,6 +5,7 @@ import at.jkvn.eventlib.annotation.Priority;
 import at.jkvn.eventlib.enumeration.EventPriority;
 import at.jkvn.eventlib.registry.Configuration;
 import at.jkvn.eventlib.registry.ListenerRegistryType;
+import at.jkvn.eventlib.exception.AutomaticListenerException;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.reflections.Reflections;
@@ -73,7 +74,7 @@ public class EventLib {
 
     public static void registerListener(Listener listener) throws Exception {
         if(isAutomatic()) {
-            throw new Exception("Cannot register listener on automatic mode"); //Todo: create custom exception
+            throw new AutomaticListenerException("Cannot register listener on automatic mode");
         }
         listeners.add(listener);
     }
