@@ -2,7 +2,6 @@
 ## ⚠️ UNDER DEVELOPMENT ⚠️
 
 Welcome to EventLib, your user-friendly Java event library using sockets for seamless communication between various applications.
-
 ## **Quick Start** 🚀
 
 ### Maven
@@ -41,7 +40,7 @@ Then, include the dependency:
 ```groovy
 implementation("at.jkvn.eventlib:EventLib:LATEST")
 ```
-
+---
 ## Integration 🛠️
 
 Integrating EventLib into your project is straightforward:
@@ -97,9 +96,12 @@ class StartupEvent extends Event {}
 ```java
 EventLib.call(new StartupEvent());
 ```
+---
+## Extras & Features 🎉
 
-## Priorities
-
+### Priorities 
+You can set the priority of an event with our built-in @Priority annotation. 
+This tells you that the event with the HIGHEST priority is executed first and then the next and the next
 EventLib supports the following event priorities:
 
 - `EventPriority.LOWEST`
@@ -108,8 +110,27 @@ EventLib supports the following event priorities:
 - `EventPriority.HIGH`
 - `EventPriority.HIGHEST`
 
-## Extras & Features
+````java
+@EventHandler
+@Priority(EventPriority.HIGHEST)
+public void onListenYourFavoriteEvent(YourFavoriteEvent event) {
+    System.out.print("This event is executed first");
+}
 
+@EventHandler
+@Priority(EventPriority.HIGH)
+public void onListenYourFavoriteEvent(YourFavoriteEvent event) {
+    System.out.print("This event is executed after the HIGHEST event");
+}
+
+@EventHandler
+@Priority(EventPriority.NORMAL)
+public void onListenYourFavoriteEvent(YourFavoriteEvent event) {
+    System.out.print("This event is executed after the HIGH event");
+}
+````
+--- 
+### Cancellation
 EventLib provides additional features such as event cancellation and resumption:
 
 ```java
@@ -140,6 +161,7 @@ public void onListenYourFavoriteEvent(YourFavoriteEvent event) {
 }
 ```
 
+
 ## Future Plans 🛌
 
 - [ ] Asynchronous events
@@ -149,3 +171,6 @@ public void onListenYourFavoriteEvent(YourFavoriteEvent event) {
 - [x] Event listener priority
 - [ ] Socket connection
 - [ ] Socket authentication (password, private key, etc.)
+
+## License 📜
+The contents of this repository are licensed under the [Apache License, version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
