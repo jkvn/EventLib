@@ -32,29 +32,26 @@ public class EventLib {
 
     @SneakyThrows
     public static void call(Event event) {
-        if (isAutomatic()) {
-            invokeMethods(getMethods(), event, false);
-            return;
-        }
-
-        (new ArrayList<>(listeners)).forEach(listener -> {
-            invokeMethods(Arrays.stream(listener.getClass().getMethods()).toList(), event, false);
-        });
+        callEvent(event);
     }
 
     @SneakyThrows
     public static void callAsync(Event event) {
+        executor.execute(() -> callEvent(event));
+    }
+
+    private static void callEvent(Event event) {
         if (isAutomatic()) {
-            invokeMethods(getMethods(), event, true);
+            invokeMethods(getMethods(), event);
             return;
         }
 
         (new ArrayList<>(listeners)).forEach(listener -> {
-            invokeMethods(Arrays.stream(listener.getClass().getMethods()).toList(), event, true);
+            invokeMethods(Arrays.stream(listener.getClass().getMethods()).toList(), event);
         });
     }
 
-    private static void invokeMethods(List<Method> methods, Event event, boolean async) {
+    private static void invokeMethods(List<Method> methods, Event event) {
         methods.stream()
                 .filter(method -> method.getParameterCount() == 1
                         && method.getParameterTypes()[0].isAssignableFrom(event.getClass()))
@@ -63,10 +60,6 @@ public class EventLib {
                     return priority != null ? priority.value().ordinal() : EventPriority.NORMAL.ordinal();
                 }))
                 .forEach(method -> {
-                    if (async)  {
-                        executor.execute(() -> invokeSafely(method, event));
-                        return;
-                    }
                     invokeSafely(method, event);
                 });
     }
