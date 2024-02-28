@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Getter
 public class EventLib {
@@ -25,20 +27,34 @@ public class EventLib {
     private static Configuration configuration;
     @Getter
     private static final List<Listener> listeners = new ArrayList<>();
+    @Getter
+    private static final ExecutorService executor = Executors.newCachedThreadPool();
 
     @SneakyThrows
     public static void call(Event event) {
         if (isAutomatic()) {
-            invokeMethods(getMethods(), event);
+            invokeMethods(getMethods(), event, false);
             return;
         }
 
         (new ArrayList<>(listeners)).forEach(listener -> {
-            invokeMethods(Arrays.stream(listener.getClass().getMethods()).toList(), event);
+            invokeMethods(Arrays.stream(listener.getClass().getMethods()).toList(), event, false);
         });
     }
 
-    private static void invokeMethods(List<Method> methods, Event event) {
+    @SneakyThrows
+    public static void callAsync(Event event) {
+        if (isAutomatic()) {
+            invokeMethods(getMethods(), event, true);
+            return;
+        }
+
+        (new ArrayList<>(listeners)).forEach(listener -> {
+            invokeMethods(Arrays.stream(listener.getClass().getMethods()).toList(), event, true);
+        });
+    }
+
+    private static void invokeMethods(List<Method> methods, Event event, boolean async) {
         methods.stream()
                 .filter(method -> method.getParameterCount() == 1
                         && method.getParameterTypes()[0].isAssignableFrom(event.getClass()))
@@ -47,6 +63,10 @@ public class EventLib {
                     return priority != null ? priority.value().ordinal() : EventPriority.NORMAL.ordinal();
                 }))
                 .forEach(method -> {
+                    if (async)  {
+                        executor.execute(() -> invokeSafely(method, event));
+                        return;
+                    }
                     invokeSafely(method, event);
                 });
     }
