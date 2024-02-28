@@ -51,6 +51,15 @@ public class TestProject implements Listener {
         assertTrue(dummyEvent.wasCalled());
     }
 
+    @Test
+    public void callAsync() {
+        DummyEvent dummyEvent = new DummyEvent();
+
+        EventLib.callAsync(dummyEvent);
+
+        assertTrue(dummyEvent.wasCalled());
+    }
+
     @EventHandler
     public void onDummyEvent(DummyEvent event) {
         event.call();
