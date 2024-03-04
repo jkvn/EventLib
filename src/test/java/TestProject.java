@@ -7,12 +7,14 @@ import event.DummyEvent;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestProject implements Listener {
 
     @BeforeAll
-    public static void setUp() {
+    public static void setUp() throws IOException {
         EventLib.configure(Configuration.builder()
                 .type(ListenerRegistryType.AUTOMATIC)
                 .build());
