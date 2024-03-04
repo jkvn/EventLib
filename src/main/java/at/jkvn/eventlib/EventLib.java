@@ -5,6 +5,8 @@ import at.jkvn.eventlib.annotation.Priority;
 import at.jkvn.eventlib.enumeration.EventPriority;
 import at.jkvn.eventlib.registry.Configuration;
 import at.jkvn.eventlib.registry.ListenerRegistryType;
+import at.jkvn.eventlib.socket.PeerThread;
+import at.jkvn.eventlib.socket.ServerThread;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.reflections.Reflections;
@@ -12,7 +14,9 @@ import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -32,9 +36,7 @@ public class EventLib {
             return;
         }
 
-        (new ArrayList<>(listeners)).forEach(listener -> {
-            invokeMethods(Arrays.stream(listener.getClass().getMethods()).toList(), event);
-        });
+        (new ArrayList<>(listeners)).forEach(listener -> invokeMethods(Arrays.stream(listener.getClass().getMethods()).toList(), event));
     }
 
     private static void invokeMethods(List<Method> methods, Event event) {
@@ -90,7 +92,20 @@ public class EventLib {
         listeners.removeAll(Arrays.stream(allListeners).toList());
     }
 
-    public static void configure(Configuration configuration) {
+    public static void configure(Configuration configuration) throws IOException {
         EventLib.configuration = configuration;
+
+        ServerThread serverThread = new ServerThread(configuration.getPort());
+        serverThread.start();
+
+        Arrays.stream(configuration.getAllowedHosts()).forEach(inetSocketAddress -> {
+            Socket socket = null;
+            try {
+                socket = new Socket(inetSocketAddress.getAddress(), inetSocketAddress.getPort());
+                new PeerThread(socket).start();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

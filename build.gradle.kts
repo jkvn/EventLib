@@ -13,6 +13,7 @@ repositories {
 }
 
 dependencies {
+    implementation("javax.json:javax.json-api:1.1.4")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
     implementation("org.reflections:reflections:0.9.12")
