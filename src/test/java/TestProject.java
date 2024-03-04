@@ -11,34 +11,37 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestProject implements Listener {
 
+    private static EventLib eventLib;
+
     @BeforeAll
     public static void setUp() {
-        EventLib.configure(Configuration.builder()
+        eventLib = new EventLib();
+        eventLib.init(Configuration.builder()
                 .type(ListenerRegistryType.AUTOMATIC)
                 .build());
     }
 
     @Test
     public void configure() {
-        assertEquals(ListenerRegistryType.AUTOMATIC, EventLib.getConfiguration().getType());
+        assertEquals(ListenerRegistryType.AUTOMATIC, eventLib.getConfiguration().getType());
     }
 
     @Test
     public void unAndRegisterListener() throws Exception {
-        EventLib.getConfiguration().setType(ListenerRegistryType.MANUAL);
+        eventLib.getConfiguration().setType(ListenerRegistryType.MANUAL);
 
-        EventLib.registerListener(this);
-        assertEquals(1, EventLib.getListeners().size());
-        EventLib.unregisterListener(this);
-        assertEquals(0, EventLib.getListeners().size());
+        eventLib.registerListener(this);
+        assertEquals(1, eventLib.getListeners().size());
+        eventLib.unregisterListener(this);
+        assertEquals(0, eventLib.getListeners().size());
 
-        EventLib.getConfiguration().setType(ListenerRegistryType.AUTOMATIC);
+        eventLib.getConfiguration().setType(ListenerRegistryType.AUTOMATIC);
     }
 
     @Test
     public void registerListenerOnAutomatic() {
         assertThrows(Exception.class, () -> {
-            EventLib.registerListener(this);
+            eventLib.registerListener(this);
         });
     }
 
@@ -46,7 +49,7 @@ public class TestProject implements Listener {
     public void call() {
         DummyEvent dummyEvent = new DummyEvent();
 
-        EventLib.call(dummyEvent);
+        eventLib.call(dummyEvent);
 
         assertTrue(dummyEvent.wasCalled());
     }
