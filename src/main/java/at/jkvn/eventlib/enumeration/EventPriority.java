@@ -4,9 +4,9 @@ import lombok.ToString;
 
 @ToString
 public enum EventPriority {
-    LOWEST,
-    LOW,
-    NORMAL,
+    HIGHEST,
     HIGH,
-    HIGHEST;
+    NORMAL,
+    LOW,
+    LOWEST
 }
