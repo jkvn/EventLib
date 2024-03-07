@@ -5,6 +5,7 @@ import at.jkvn.eventlib.annotation.Priority;
 import at.jkvn.eventlib.enumeration.EventPriority;
 import at.jkvn.eventlib.registry.Configuration;
 import at.jkvn.eventlib.registry.ListenerRegistryType;
+import at.jkvn.eventlib.exception.AutomaticListenerException;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.reflections.Reflections;
@@ -17,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Getter
 public class EventLib {
@@ -24,9 +27,20 @@ public class EventLib {
     private static Configuration configuration;
     @Getter
     private static final List<Listener> listeners = new ArrayList<>();
+    @Getter
+    private static final ExecutorService executor = Executors.newCachedThreadPool();
 
     @SneakyThrows
     public static void call(Event event) {
+        callEvent(event);
+    }
+
+    @SneakyThrows
+    public static void callAsync(Event event) {
+        executor.execute(() -> callEvent(event));
+    }
+
+    private static void callEvent(Event event) {
         if (isAutomatic()) {
             invokeMethods(getMethods(), event);
             return;
@@ -46,7 +60,9 @@ public class EventLib {
                     return priority != null ? priority.value().ordinal() : EventPriority.NORMAL.ordinal();
                 }))
                 .forEach(method -> {
-                    invokeSafely(method, event);
+                    if (!event.isCancelled()) {
+                        invokeSafely(method, event);
+                    }
                 });
     }
 
@@ -73,7 +89,7 @@ public class EventLib {
 
     public static void registerListener(Listener listener) throws Exception {
         if(isAutomatic()) {
-            throw new Exception("Cannot register listener on automatic mode"); //Todo: create custom exception
+            throw new AutomaticListenerException("Cannot register listener on automatic mode");
         }
         listeners.add(listener);
     }

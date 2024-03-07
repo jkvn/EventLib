@@ -164,7 +164,7 @@ public void onListenYourFavoriteEvent(YourFavoriteEvent event) {
 
 ## Future Plans 🛌
 
-- [ ] Asynchronous events
+- [x] Asynchronous events
 - [x] Event cancellation
 - [x] Event listener registration
 - [x] Event listener deregistration
