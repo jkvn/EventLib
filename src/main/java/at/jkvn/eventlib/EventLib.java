@@ -60,7 +60,9 @@ public class EventLib {
                     return priority != null ? priority.value().ordinal() : EventPriority.NORMAL.ordinal();
                 }))
                 .forEach(method -> {
-                    invokeSafely(method, event);
+                    if (!event.isCancelled()) {
+                        invokeSafely(method, event);
+                    }
                 });
     }
 
